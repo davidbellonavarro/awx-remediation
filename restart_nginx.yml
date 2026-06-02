@@ -1,0 +1,9 @@
+---
+- name: Auto-Remediacion - Reiniciar Nginx en Target
+  hosts: all
+  become: yes
+  tasks:
+    - name: Asegurar que el servicio Nginx se reinicie
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
