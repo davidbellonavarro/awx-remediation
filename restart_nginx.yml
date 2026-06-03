@@ -7,3 +7,18 @@
       ansible.builtin.service:
         name: nginx
         state: restarted
+
+    - name: Notificar exito de vuelta a ServiceNow (Cierre de Alerta)
+      delegate_to: localhost
+      become: no
+      ansible.builtin.uri:
+        url: "https://{{ SN_INSTANCE }}.service-now.com/api/now/table/em_alert/{{ SN_ALERT_SYS_ID }}"
+        method: PUT
+        user: "{{ SN_USER }}"
+        password: "{{ SN_PASSWORD }}"
+        force_basic_auth: yes
+        body_format: json
+        body:
+          state: "Closed"
+          work_notes: "Auto-remediacion exitosa. Servicio Nginx restablecido por AWX (Ansible)."
+        status_code: 200
